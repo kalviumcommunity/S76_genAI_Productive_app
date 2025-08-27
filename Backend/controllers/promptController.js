@@ -26,3 +26,17 @@ export const createOneShotPrompt = async (req, res) => {
   }
 };
 
+export const createMultiShotPrompt = async (req, res) => {
+  try {
+    const { content } = req.body;
+    if (!content) {
+      return res.status(400).json({ message: "Prompt content is required." });
+    }
+    const prompt = await Prompt.create({ role: "multi-shot", content, type: "multi-shot" });
+    res.status(201).json(prompt);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
