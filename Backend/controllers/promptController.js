@@ -69,4 +69,35 @@ export const createDynamicPrompt = async (req, res) => {
   }
 };
 
+export const createChainOfThoughtPrompt = async (req, res) => {
+  try {
+    const { question } = req.body;
+    if (!question) {
+      return res.status(400).json({ message: "Question is required." });
+    }
+
+    // Example CoT prompt template with step-by-step reasoning
+    const promptContent = `
+Problem: What is the value of 3 + 4 + 19 - 12?
+Solution:
+- Start with the first two numbers: 3 + 4 = 7.
+- Add the next number: 7 + 19 = 26.
+- Subtract the last number: 26 - 12 = 14.
+- Final answer: 14.
+
+Problem: ${question}
+Solution:
+`;
+
+    const prompt = await Prompt.create({
+      role: "system",
+      content: promptContent,
+      type: "chain-of-thought"
+    });
+
+    res.status(201).json(prompt);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
