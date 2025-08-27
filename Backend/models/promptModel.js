@@ -1,18 +1,16 @@
-import mongoose from "mongoose";
-
-const promptSchema = new mongoose.Schema(
-  {
-    role: {
-      type: String,
-      enum: ["system", "user"],
-      required: true,
-    },
-    content: {
-      type: String,
-      required: true,
-    },
+const promptSchema = new mongoose.Schema({
+  role: {
+    type: String,
+    enum: ["system", "user", "zero-shot"],
+    required: true,
   },
-  { timestamps: true }
-);
-
-export default mongoose.model("Prompt", promptSchema);
+  content: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ["instruction", "zero-shot"], // Extend if needed
+    default: "instruction"
+  }
+}, { timestamps: true });

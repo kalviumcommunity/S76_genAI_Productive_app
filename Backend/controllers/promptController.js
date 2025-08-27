@@ -1,28 +1,12 @@
-import Prompt from "../models/promptModel.js";
-
-// Create a new system/user prompt
-export const createPrompt = async (req, res) => {
+export const createZeroShotPrompt = async (req, res) => {
   try {
-    const { role, content } = req.body;
-
-    if (!role || !content) {
-      return res.status(400).json({ message: "Role and content are required." });
+    const { content } = req.body;
+    if (!content) {
+      return res.status(400).json({ message: "Prompt content is required." });
     }
-
-    const prompt = await Prompt.create({ role, content });
+    // For zero-shot, set role to 'zero-shot' and type accordingly
+    const prompt = await Prompt.create({ role: "zero-shot", content, type: "zero-shot" });
     res.status(201).json(prompt);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// Get all prompts (optionally filter by role)
-export const getPrompts = async (req, res) => {
-  try {
-    const { role } = req.query;
-    const filter = role ? { role } : {};
-    const prompts = await Prompt.find(filter).sort({ createdAt: -1 });
-    res.status(200).json(prompts);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
